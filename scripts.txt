@@ -1,0 +1,156 @@
+SETUP INICIAL DO INDICE KIBANA:
+
+GET /_cat/health?v
+
+GET /_cat/indices?v
+
+PUT /.kibana/_settings
+{
+  "index": {
+    "number_of_replicas": 0
+  }
+}
+
+
+
+CRIANDO UM INDICE PRODUTOS:
+
+PUT /produtos
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 3,
+      "number_of_replicas": 0
+    }
+  },
+  "mappings": {
+    "v1": {
+      "_all": {
+        "type": "text",
+        "analyzer": "portuguese"
+      },
+      "properties": {
+        "nome": {
+          "fields": {
+            "original": {
+              "type": "keyword"
+            }
+          },
+          "type": "text",
+          "analyzer": "portuguese"
+        },
+        "categoria": {
+          "fields": {
+            "original": {
+              "type": "keyword"
+            }
+          },
+          "type": "text",
+          "analyzer": "portuguese"
+        },
+        "subcategoria": {
+          "fields": {
+            "original": {
+              "type": "keyword"
+            }
+          },
+          "type": "text",
+          "analyzer": "portuguese"
+        },
+        "tags": {
+          "fields": {
+            "original": {
+              "type": "keyword"
+            }
+          },
+          "type": "string",
+          "index": "analyzed",
+          "analyzer": "portuguese"
+        },
+        "fornecedor": {
+          "fields": {
+            "original": {
+              "type": "keyword",
+              "index": "not_analyzed"
+            }
+          },
+          "type": "text"
+        },
+        "preco": {
+          "type": "float"
+        }
+      }
+    }
+  }
+}
+
+POPULANDO O INDICE PRODUTOS:
+
+POST /produtos/v1/
+{
+  "nome": "Scala: Como escalar sua produtividade",
+  "categoria": "Livros",
+  "subcategoria": "Tecnologia",
+  "tags": ["impresso", "digital", "scala", "programação funcional", "computação", "imutabilidade"],
+  "fornecedor": "Casa do Código",
+  "preco": 69.90
+}
+
+POST /produtos/v1/
+{
+  "nome": "Big Data: Técnicas e tecnologias para extração de valor dos dados",
+  "categoria": "Livros",
+  "subcategoria": "Tecnologia",
+  "tags": ["impresso", "digital", "larga escala", "computação"],
+  "fornecedor": "Casa do Código",
+  "preco": 49.90
+}
+
+POST /produtos/v1/
+{
+  "nome": "A história do futebol brasileiro",
+  "categoria": "Livros",
+  "subcategoria": "Esportes",
+  "tags": ["impresso", "digital", "esportes", "futebol"],
+  "fornecedor": "Casa do Código",
+  "preco": 59.90
+}
+
+POST /produtos/v1/
+{
+  "nome": "Bola de futsal",
+  "categoria": "Esportes",
+  "subcategoria": "Futebol",
+  "tags": ["futebol", "amador", "quadra"],
+  "fornecedor": "Irmãos Silveira Esportes",
+  "preco": 29.90
+}
+
+POST /produtos/v1/
+{
+  "nome": "Camiseta Seleção Brasileira",
+  "categoria": "Roupas",
+  "subcategoria": "Esportes",
+  "tags": ["futebol", "amador", "seleção", "amarelinha"],
+  "fornecedor": "Irmãos Silveira Esportes",
+  "preco": 129.90
+}
+
+POST /produtos/v1/
+{
+  "nome": "Chuteira de Futebol",
+  "categoria": "Calçados",
+  "subcategoria": "Esportes",
+  "tags": ["futebol", "amador", "campo", "amarelinha"],
+  "fornecedor": "Irmãos Silveira Esportes",
+  "preco": 129.90
+}
+
+
+CONSULTAS NO DISCOVERY:
+
+categoria:(calcados OR roupas)
+
+tags:(computacao futebol)
+
+tags:impresso AND nome:scala
