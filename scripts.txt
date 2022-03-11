@@ -154,3 +154,69 @@ categoria:(calcados OR roupas)
 tags:(computacao futebol)
 
 tags:impresso AND nome:scala
+
+
+UTILIZANDO O DEVTOOLS:
+
+
+GET /produtos/v1/_search?q=digital
+
+// o famoso select * from
+GET /produtos/v1/_search
+{
+  "query" : {
+    "match_all": {
+    }
+  }
+}
+
+
+GET /produtos/v1/_search
+{
+  "query" : {
+    "match": {
+      "categoria": "calçados"
+    }
+  }
+}
+
+GET /produtos/v1/_search
+{
+  "query" : {
+    "match": {
+      "tags": "digital"
+    }
+  }
+}
+
+// equivalente ao exemplo tags:impresso AND nome:scala
+GET /produtos/v1/_search
+{
+  "query" : {
+    "bool": {
+      "must": [
+        {"match": {"tags": "impresso" }},
+        {"match": {"nome": "scala" }}
+      ]
+    }
+  }
+}
+
+// categoria = livro AND
+// (tags = imutabilidade OR tags = larga escala)
+// AND NOT(nome = scala)
+GET /produtos/v1/_search
+{
+  "query" : {
+    "bool": {
+      "must": {"match": {"categoria": "livro" }},
+      "should": [
+        {"match": {"tags": "imutabilidade" }},
+        {"match": {"tags": "larga escala" }}
+      ],
+      "must_not": {"match": {"nome": "scala"}}
+    }
+  }
+}
+
+
